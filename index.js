@@ -36,11 +36,17 @@ async function run() {
 
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
-            console.log(email);
             const query = {email: email};
             const user = await usersCollection.findOne(query);
-            console.log(user);
             res.send(user);
+        });
+
+        app.get('/users/role/:role', async (req, res) => {
+            const role = req.params.role;
+            const query = {role: role};
+            const users = await usersCollection.find(query).toArray();
+            console.log(users);
+            res.send(users);
         });
 
 
