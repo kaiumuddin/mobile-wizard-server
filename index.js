@@ -96,6 +96,13 @@ async function run() {
             res.send(result);
         });
 
+        app.get('/advertised', async (req, res) => {
+            const query = {advertised: true};
+            const result = await productCollection.find(query).toArray();
+            console.log(result);
+            res.send(result);
+        });
+
 
     }
     finally {
