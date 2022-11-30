@@ -28,7 +28,6 @@ async function run() {
 
         app.post('/users', async (req, res) => {
             const user = req.body;
-            console.log(user);
             // TODO: make sure you do not enter duplicate user email
             // only insert users if the user doesn't exist in the database
             const result = await usersCollection.insertOne(user);
@@ -46,7 +45,6 @@ async function run() {
             const role = req.params.role;
             const query = {role: role};
             const users = await usersCollection.find(query).toArray();
-            console.log(users);
             res.send(users);
         });
 
@@ -59,12 +57,44 @@ async function run() {
 
         app.post('/products', async (req, res) => {
             const newproduct = req.body;
-            console.log(newproduct);
             const result = await productCollection.insertOne(newproduct);
-            console.log(result);
             res.send(result);
         });
 
+        app.get('/products/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = {selleremail: email};
+            const result = await productCollection.find(query).toArray();
+            res.send(result);
+        });
+
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const result = await productCollection.deleteOne(filter);
+            res.send(result);
+        });
+
+        app.put('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updatedDoc = {
+                $set: {
+                    advertised: true,
+                }
+            };
+
+            const result = await productCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        });
+
+        app.get('/category/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {category: id};
+            const result = await productCollection.find(query).toArray();
+            res.send(result);
+        });
 
 
     }
