@@ -25,6 +25,7 @@ async function run() {
         const usersCollection = client.db('mobileWizard').collection('users');
         const productCollection = client.db('mobileWizard').collection('products');
 
+        // create new user
         app.post('/users', async (req, res) => {
             const user = req.body;
 
@@ -40,6 +41,7 @@ async function run() {
 
         });
 
+        // find a user
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = {email: email};
@@ -47,6 +49,7 @@ async function run() {
             res.send(user);
         });
 
+        // find a user role
         app.get('/users/role/:role', async (req, res) => {
             const role = req.params.role;
             const query = {role: role};
@@ -54,6 +57,7 @@ async function run() {
             res.send(users);
         });
 
+        // delete a user
         app.delete('/users/:id', async (req, res) => {
             const id = req.params.id;
             const filter = {_id: ObjectId(id)};
@@ -61,12 +65,14 @@ async function run() {
             res.send(result);
         });
 
+        // create a product
         app.post('/products', async (req, res) => {
             const newproduct = req.body;
             const result = await productCollection.insertOne(newproduct);
             res.send(result);
         });
 
+        // products by seller
         app.get('/products/:email', async (req, res) => {
             const email = req.params.email;
             const query = {selleremail: email};
@@ -74,6 +80,7 @@ async function run() {
             res.send(result);
         });
 
+        // delete a product by seller
         app.delete('/products/:id', async (req, res) => {
             const id = req.params.id;
             const filter = {_id: ObjectId(id)};
@@ -81,6 +88,7 @@ async function run() {
             res.send(result);
         });
 
+        // update advertise
         app.put('/products/:id', async (req, res) => {
             const id = req.params.id;
             const filter = {_id: ObjectId(id)};
@@ -95,6 +103,7 @@ async function run() {
             res.send(result);
         });
 
+        // product by category
         app.get('/category/:id', async (req, res) => {
             const id = req.params.id;
             const query = {category: id};
@@ -102,6 +111,7 @@ async function run() {
             res.send(result);
         });
 
+        // advertise items
         app.get('/advertised', async (req, res) => {
             const query = {advertised: true};
             const result = await productCollection.find(query).toArray();
