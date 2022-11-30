@@ -24,6 +24,7 @@ const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: 
 async function run() {
     try {
         const usersCollection = client.db('mobileWizard').collection('users');
+        const productCollection = client.db('mobileWizard').collection('products');
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -47,6 +48,21 @@ async function run() {
             const users = await usersCollection.find(query).toArray();
             console.log(users);
             res.send(users);
+        });
+
+        app.delete('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const result = await usersCollection.deleteOne(filter);
+            res.send(result);
+        });
+
+        app.post('/products', async (req, res) => {
+            const newproduct = req.body;
+            console.log(newproduct);
+            const result = await productCollection.insertOne(newproduct);
+            console.log(result);
+            res.send(result);
         });
 
 
