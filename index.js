@@ -28,10 +28,17 @@ async function run() {
 
         app.post('/users', async (req, res) => {
             const user = req.body;
-            // TODO: make sure you do not enter duplicate user email
-            // only insert users if the user doesn't exist in the database
-            const result = await usersCollection.insertOne(user);
-            res.send(result);
+
+            const query = {email: user.email};
+            const found = await usersCollection.findOne(query);
+
+            if (!found) {
+                const result = await usersCollection.insertOne(user);
+                res.send(result);
+            }
+
+            res.send(found);
+
         });
 
         app.get('/users/:email', async (req, res) => {
@@ -99,7 +106,6 @@ async function run() {
         app.get('/advertised', async (req, res) => {
             const query = {advertised: true};
             const result = await productCollection.find(query).toArray();
-            console.log(result);
             res.send(result);
         });
 
